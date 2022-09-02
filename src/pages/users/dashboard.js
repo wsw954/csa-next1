@@ -16,6 +16,7 @@ export default function Home() {
           <a>New User Registration Form</a>
         </Link>
       </div>
+      <br></br>
     </div>
   );
 }
