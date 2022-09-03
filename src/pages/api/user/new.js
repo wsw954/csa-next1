@@ -12,6 +12,7 @@ export default async function createNewUser(req, res) {
     newUser.firstName = req.body.first;
     newUser.lastName = req.body.last;
     newUser.email = req.body.email;
+    newUser.userType = req.body.userType;
 
     User.create(newUser, function (err, user) {
       if (err) {
