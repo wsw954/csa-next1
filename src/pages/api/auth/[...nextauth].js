@@ -8,12 +8,10 @@ import User from "../../../../models/user";
 export default NextAuth({
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log(user);
       await connectMongo();
       const dbUser = await User.findOne({
         email: user.email,
       });
-      console.log(dbUser);
       if (dbUser != null) {
         return true;
       } else {
@@ -22,6 +20,12 @@ export default NextAuth({
         // Or you can return a URL to redirect to:
         // return '/unauthorized'
       }
+    },
+    async session({ session, token, user }) {
+      console.log(user);
+      //Pass user doc to session
+      session.user = user;
+      return session;
     },
   },
 

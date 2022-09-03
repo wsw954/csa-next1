@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function Home() {
   const { data: session } = useSession();
   const { push, asPath } = useRouter();
-
+  console.log(session);
   const handleSignOut = async () => {
     const data = await signOut({ redirect: false, callbackUrl: "/" });
     push(data.url);
