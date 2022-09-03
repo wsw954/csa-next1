@@ -15,10 +15,7 @@ export default NextAuth({
       if (dbUser != null) {
         return true;
       } else {
-        // Return false to display a default error message
         return false;
-        // Or you can return a URL to redirect to:
-        // return '/unauthorized'
       }
     },
     async session({ session, token, user }) {

@@ -1,33 +1,40 @@
 import React from "react";
-import { Heading } from "@chakra-ui/react";
-import { getSession, useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { Heading } from "@chakra-ui/react";
 import styles from "../../../styles/Home.module.css";
 import Link from "next/link";
 
-export default function Home() {
-  const { data: session } = useSession();
+export default function Dashboard() {
+  const { data: session, status } = useSession();
   const { push, asPath } = useRouter();
-  console.log(session);
+
   const handleSignOut = async () => {
     const data = await signOut({ redirect: false, callbackUrl: "/" });
     push(data.url);
   };
 
+  if (status === "authenticated") {
+    return (
+      <>
+        <div>
+          <Heading>User Dashboard</Heading>
+          <p>
+            Signed in as {session.user.firstName} {session.user.lastName}
+          </p>
+        </div>
+        <div className={styles.grid}>
+          <button onClick={handleSignOut}>Sign out</button>
+        </div>
+      </>
+    );
+  }
+
   return (
-    <div>
-      <Heading>User Dashboard</Heading>
-      <br></br>
-      <div className={styles.grid}>
-        <Link href={`/users/new`}>
-          <a>New User Registration Form</a>
-        </Link>
-      </div>
-      <br></br>
-      <br></br>
-      <div className={styles.grid}>
-        <button onClick={handleSignOut}>Sign out</button>
-      </div>
+    <div className={styles.grid}>
+      <Link href={`/users/login`}>
+        <a>Log In</a>
+      </Link>
     </div>
   );
 }
