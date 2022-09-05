@@ -8,13 +8,14 @@ import Link from "next/link";
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const { push, asPath } = useRouter();
+  console.log(session);
 
   const handleSignOut = async () => {
     const data = await signOut({ redirect: false, callbackUrl: "/" });
     push(data.url);
   };
 
-  if (status === "authenticated") {
+  if (status === "authenticated " && session.user.role === "Dealer") {
     return (
       <>
         <div>

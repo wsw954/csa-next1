@@ -8,13 +8,14 @@ import Link from "next/link";
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const { push, asPath } = useRouter();
+  console.log(session);
 
   const handleSignOut = async () => {
     const data = await signOut({ redirect: false, callbackUrl: "/" });
     push(data.url);
   };
 
-  if (status === "authenticated") {
+  if (status === "authenticated" && session.user.role === "Buyer") {
     return (
       <>
         <div>
@@ -32,7 +33,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.grid}>
-      <Link href={`/users/login`}>
+      <Link href={`/login`}>
         <a>Log In</a>
       </Link>
     </div>

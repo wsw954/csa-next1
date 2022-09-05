@@ -53,15 +53,11 @@ export default function NewUserForm() {
           </div>
           <br></br>
           <div>
-            <label htmlFor="userType">User Type</label>
-            <input
-              type="text"
-              id="userType"
-              name="userType"
-              value={userType}
-              onChange={(e) => setUserType(e.target.value)}
-              required
-            />
+            <label htmlFor="role">Role </label>
+            <select name="role" id="role">
+              <option value="Buyer">Buyer</option>{" "}
+              <option value="Dealer">Dealer</option>
+            </select>
           </div>
           <br></br>
           <button type="submit">Submit</button>

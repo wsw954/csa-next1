@@ -20,14 +20,20 @@ export default NextAuth({
       }
     },
     async session({ session, token, user }) {
-      //Pass user doc to session
-      session.user = user;
+      //Pass user role to session
+      session.user.role = user.role;
+      //Pass user ID to session
+      session.user.id = user.id;
+      session.user.firstName = user.firstName;
+      session.user.lastName = user.lastName;
       return session;
     },
     async redirect({ url, baseUrl }) {
       if (dbUser != null) {
-        //Route to page relevant to userType (buyer or dealer)
-        return `${baseUrl}` + "/" + dbUser.userType + "s/dashboard";
+        //Route to page relevant to user role (buyer or dealer)
+        return (
+          `${baseUrl}` + "/" + `${dbUser.role.toLowerCase()}` + "s/dashboard"
+        );
       }
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;

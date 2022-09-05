@@ -12,13 +12,13 @@ export default async function createNewUser(req, res) {
     newUser.firstName = req.body.first;
     newUser.lastName = req.body.last;
     newUser.email = req.body.email;
-    newUser.userType = req.body.userType;
+    newUser.role = req.body.role;
 
     User.create(newUser, function (err, user) {
       if (err) {
         console.log(err);
       } else {
-        res.redirect("/users/dashboard");
+        res.redirect("/login");
       }
     });
   } catch (error) {

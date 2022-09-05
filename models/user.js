@@ -1,11 +1,10 @@
 import { Schema, model, models } from "mongoose";
 
 const userSchema = new Schema({
-  userType: String,
   firstName: String,
   lastName: String,
   email: String,
-  userType: String,
+  role: String,
 });
 
 const User = models.User || model("User", userSchema);

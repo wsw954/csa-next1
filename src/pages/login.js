@@ -16,11 +16,10 @@ export default function Login() {
       email,
       redirect: false,
     }).then(function (result) {
+      console.log(result);
       if (result.error !== null) {
         if (result.status === 401) {
-          setLoginError(
-            "Your username/password combination was incorrect. Please try again"
-          );
+          setLoginError("Your email is not in the system. Please try again");
         } else {
           setLoginError(result.error);
         }
