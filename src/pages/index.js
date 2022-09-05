@@ -11,7 +11,7 @@ export default function Home() {
     <div>
       <Heading>CSA-Next1</Heading>
       <div className={styles.grid}>
-        <Link href={`/users/login`}>
+        <Link href={`/login`}>
           <a>Login </a>
         </Link>
       </div>

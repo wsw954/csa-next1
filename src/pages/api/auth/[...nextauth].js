@@ -4,12 +4,13 @@ import clientPromise from "../../../database/connectDB";
 import EmailProvider from "next-auth/providers/email";
 import connectMongo from "../../../../utils/connectMongo";
 import User from "../../../../models/user";
+let dbUser = null;
 
 export default NextAuth({
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       await connectMongo();
-      const dbUser = await User.findOne({
+      dbUser = await User.findOne({
         email: user.email,
       });
       if (dbUser != null) {
@@ -19,10 +20,20 @@ export default NextAuth({
       }
     },
     async session({ session, token, user }) {
-      console.log(user);
       //Pass user doc to session
       session.user = user;
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      if (dbUser != null) {
+        //Route to page relevant to userType (buyer or dealer)
+        return `${baseUrl}` + "/" + dbUser.userType + "s/dashboard";
+      }
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 
