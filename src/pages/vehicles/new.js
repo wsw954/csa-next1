@@ -6,13 +6,20 @@ import styles from "../../../styles/Home.module.css";
 import Link from "next/link";
 
 export default function NewVehicleForm() {
+  const { data: session, status } = useSession();
+
   // Handles the submit event on form submit.
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
 
+    //Get user info
+    const userRole = session.user.role;
+
     // Get data from the form.
     const data = {
+      userID: session.user.id,
+      userRole: userRole,
       make: event.target.make.value,
       model: event.target.model.value,
     };
@@ -41,7 +48,6 @@ export default function NewVehicleForm() {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json();
-    console.log(result);
     alert(`Is this your vehicle ${result.newVehicle.make}`);
   };
   return (

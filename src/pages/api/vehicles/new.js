@@ -9,6 +9,8 @@ export default async function createNewVehicle(req, res) {
   try {
     await connectMongo();
     var newVehicle = {};
+    newVehicle.userID = req.body.userID;
+    newVehicle.userRole = req.body.userRole;
     newVehicle.make = req.body.make;
     newVehicle.model = req.body.model;
 
