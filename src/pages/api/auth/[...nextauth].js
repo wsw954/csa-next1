@@ -20,9 +20,8 @@ export default NextAuth({
       }
     },
     async session({ session, token, user }) {
-      //Pass user role to session
+      //Pass relevant user info to session
       session.user.role = user.role;
-      //Pass user ID to session
       session.user.id = user.id;
       session.user.firstName = user.firstName;
       session.user.lastName = user.lastName;

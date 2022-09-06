@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Heading } from "@chakra-ui/react";
@@ -30,10 +31,13 @@ export default function Dashboard() {
       </>
     );
   }
-
+  //Reroute the Buyer to relevant dashboard
+  if (status === "authenticated" && session.user.role === "Buyer") {
+    push("/buyers/dashboard");
+  }
   return (
     <div className={styles.grid}>
-      <Link href={`/users/login`}>
+      <Link href={`/login`}>
         <a>Log In</a>
       </Link>
     </div>
