@@ -1,72 +1,91 @@
 import React from "react";
-import { Heading } from "@chakra-ui/react";
-import { Container } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import styles from "../../../styles/Home.module.css";
 import Link from "next/link";
+import { Heading } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
+import { Select } from "@chakra-ui/react";
 
 export default function NewVehicleForm() {
-  const { data: session, status } = useSession();
+  let { data: session, status } = useSession();
 
-  // Handles the submit event on form submit.
-  const handleSubmit = async (event) => {
-    // Stop the form from submitting and refreshing the page.
-    event.preventDefault();
+  if (status === "authenticated") {
+    // Handles the submit event on form submit.
+    const handleSubmit = async (event) => {
+      // Stop the form from submitting and refreshing the page.
+      event.preventDefault();
+      // Get data from the form.
+      const data = {
+        userID: session.user.id,
+        userRole: session.user.role,
+        make: event.target.make.value,
+        model: event.target.model.value,
+      };
 
-    //Get user info
-    const userRole = session.user.role;
+      // Send the data to the server in JSON format.
+      const JSONdata = JSON.stringify(data);
 
-    // Get data from the form.
-    const data = {
-      userID: session.user.id,
-      userRole: userRole,
-      make: event.target.make.value,
-      model: event.target.model.value,
+      // API endpoint where we send form data.
+      const endpoint = "/api/vehicles/new";
+
+      // Form the request for sending data to the server.
+      const options = {
+        // The method is POST because we are sending data.
+        method: "POST",
+        // Tell the server we're sending JSON.
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Body of the request is the JSON data we created above.
+        body: JSONdata,
+      };
+      // Send the form data to forms API
+      const response = await fetch(endpoint, options);
+
+      // Get the response data from server as JSON.
+      // If server returns the name submitted, that means the form works.
+      const result = await response.json();
+      // alert(`Is this your vehicle ${result.newVehicle.make}`);
     };
+    return (
+      <>
+        <Container>
+          <div>
+            <Heading>Buyers Dashboard</Heading>
+          </div>
+          <p>
+            User: {session.user.firstName} {session.user.lastName}
+          </p>
+          <br></br>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <Select></Select>
+              <label htmlFor="make">Make</label>
+              <input type="text" id="make" name="make" required />
 
-    // Send the data to the server in JSON format.
-    const JSONdata = JSON.stringify(data);
+              <label htmlFor="model">Model</label>
+              <input type="text" id="model" name="model" required />
 
-    // API endpoint where we send form data.
-    const endpoint = "/api/vehicles/new";
+              <button type="submit">Submit</button>
+            </form>
+            <br></br>
+          </div>
 
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
-
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch(endpoint, options);
-
-    // Get the response data from server as JSON.
-    // If server returns the name submitted, that means the form works.
-    const result = await response.json();
-    alert(`Is this your vehicle ${result.newVehicle.make}`);
-  };
-  return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="make">Make</label>
-        <input type="text" id="make" name="make" required />
-
-        <label htmlFor="model">Model</label>
-        <input type="text" id="model" name="model" required />
-
-        <button type="submit">Submit</button>
-      </form>
-      <br></br>
-      <div>
-        <Link href={`/`}>
-          <a>Back to home page</a>
+          <div>
+            <Link href={"/" + session.user.role.toLowerCase() + "s/dashboard"}>
+              <a>Back to Home-</a>
+            </Link>
+          </div>
+        </Container>
+      </>
+    );
+  } else {
+    return (
+      <div className={styles.grid}>
+        <Link href={`/login`}>
+          <a>Log In</a>
         </Link>
       </div>
-    </>
-  );
+    );
+  }
 }
