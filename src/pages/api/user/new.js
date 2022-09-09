@@ -5,20 +5,36 @@ import User from "../../../../models/user";
  * @param {import('next').NextApiRequest} req
  * @param {import('next').NextApiResponse} res
  */
-export default async function createNewUser(req, res) {
+
+export default async function handler(req, res) {
+  const { method } = req;
+
   await connectMongo();
-  var newUser = {};
-  newUser.firstName = req.body.first;
-  newUser.lastName = req.body.last;
-  newUser.email = req.body.email;
-  newUser.userType = req.body.userType;
-  var doc = {};
-  User.create(newUser, function (err, user) {
-    if (err) {
-      console.log(err);
-    } else {
-      doc = user;
-    }
-  });
-  res.status(200).json({ doc });
+
+  switch (method) {
+    case "POST":
+      try {
+        const user = await User.create(
+          req.body
+        ); /* create a new model in the database */
+        res.status(200).json({ success: true });
+      } catch (error) {
+        res.status(400).json({ success: false, error: error });
+      }
+      break;
+    case "PUT":
+      //This is placeholder code for now
+      try {
+        const user = await User.findByIdAndUpdate(
+          req.body
+        ); /* create a new model in the database */
+        res.status(200).json({ userID: user._id });
+      } catch (error) {
+        res.status(400).json({ success: false, error: error });
+      }
+      break;
+    default:
+      res.status(400).json({ success: false });
+      break;
+  }
 }
